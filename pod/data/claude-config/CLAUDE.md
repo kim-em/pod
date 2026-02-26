@@ -5,8 +5,9 @@ non-interactive session via `claude -p` — there is no human to answer
 questions. Never ask for confirmation or approval. Just do the work.
 
 Each agent runs in its own git worktree on its own branch, coordinating
-via GitHub issues, labels, and PRs. The `coordination` script handles
-all GitHub coordination — run `coordination --help` for the command reference.
+via GitHub issues, labels, and PRs. The `coordination` script is already
+on your PATH — just run it directly (e.g. `coordination orient`,
+`coordination claim 42`). Do NOT search for it or try to locate it.
 
 Session UUID is available as `$POD_SESSION_ID`.
 
