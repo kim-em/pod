@@ -9,11 +9,11 @@ autonomous Claude sessions, coordinating via GitHub issues, labels, and PRs.
 # Install
 uv tool install git+https://github.com/kim-em/pod.git
 
-# Also available on PyPI: uv tool install dev-pod
-
 # Bootstrap a project
 cd your-project
 pod init
+
+# Now write your long-term PLAN.md
 
 # Launch the TUI
 pod
@@ -33,10 +33,6 @@ issues and PRs:
 - **Planners** create scoped work items as GitHub issues, then exit
 - **Workers** claim issues, implement changes, and open PRs
 - Auto-merge handles the rest
-
-The `coordination` script (bundled with pod) handles all GitHub-based
-multi-agent coordination. Agents find it automatically via PATH injection
--- no need to copy scripts into your project.
 
 ## Requirements
 
