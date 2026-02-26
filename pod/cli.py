@@ -1201,6 +1201,42 @@ def setup_worktree(config: dict, short_id: str) -> tuple[str, str]:
     return str(wt_dir), branch
 
 
+def install_agent_config(wt_dir: str):
+    """Install bundled commands, skills, and agent CLAUDE.md into worktree.
+
+    Merges the bundled claude-config into the worktree's .claude/ directory
+    so that Claude can find slash commands (/feature, /summarize, etc.) and
+    the agent-worker-flow skill.  The bundled agent CLAUDE.md is appended to
+    the project's existing CLAUDE.md so the agent gets both project context
+    and pod-specific instructions.
+    """
+    data_config = _data_dir() / "claude-config"
+    wt_claude = Path(wt_dir) / ".claude"
+    wt_claude.mkdir(parents=True, exist_ok=True)
+
+    # Commands
+    src_cmds = data_config / "commands"
+    if src_cmds.is_dir():
+        dst_cmds = wt_claude / "commands"
+        shutil.copytree(str(src_cmds), str(dst_cmds), dirs_exist_ok=True)
+
+    # Skills
+    src_skills = data_config / "skills"
+    if src_skills.is_dir():
+        dst_skills = wt_claude / "skills"
+        shutil.copytree(str(src_skills), str(dst_skills), dirs_exist_ok=True)
+
+    # Append agent CLAUDE.md to project CLAUDE.md
+    agent_md = data_config / "CLAUDE.md"
+    if agent_md.is_file():
+        dst_md = wt_claude / "CLAUDE.md"
+        existing = dst_md.read_text() if dst_md.is_file() else ""
+        agent_text = agent_md.read_text()
+        if agent_text not in existing:
+            with open(dst_md, "a") as f:
+                f.write("\n\n" + agent_text)
+
+
 def copy_build_cache(wt_dir: str, config: dict):
     """rsync build cache directory into worktree for faster builds."""
     cache_dir = cfg_get(config, "project", "build_cache_dir", default=".lake")
@@ -1494,6 +1530,8 @@ def agent_process_main(config: dict, agent_id: str | None = None,
         state.worktree = wt_dir
         state.branch = branch
         state.git_start = _git_rev(wt_dir)
+
+        install_agent_config(wt_dir)
 
         if wt_config.get("copy_build_cache", wt_config.get("copy_lake_cache", False)):
             copy_build_cache(wt_dir, config)
