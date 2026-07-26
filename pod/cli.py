@@ -423,16 +423,16 @@ def _agent_config_sync_check():
 
     if updated:
         print(f"pod: updated {len(updated)} file(s) from new pod version: "
-              f"{', '.join(updated)}")
+              f"{', '.join(updated)}", file=sys.stderr)
     if custom:
         print(f"pod: {len(custom)} project-customised file(s) differ from pod template: "
-              f"{', '.join(custom)}")
+              f"{', '.join(custom)}", file=sys.stderr)
     if conflicts and not first_run:
         print(f"pod: WARNING: {len(conflicts)} file(s) modified in both pod template and "
-              f"project .claude/ — not auto-updating: {', '.join(conflicts)}")
+              f"project .claude/ — not auto-updating: {', '.join(conflicts)}", file=sys.stderr)
     elif conflicts and first_run:
         print(f"pod: {len(conflicts)} file(s) differ from pod template "
-              f"(origin unknown, tracking from now): {', '.join(conflicts)}")
+              f"(origin unknown, tracking from now): {', '.join(conflicts)}", file=sys.stderr)
 
 
 def ensure_config() -> dict:
